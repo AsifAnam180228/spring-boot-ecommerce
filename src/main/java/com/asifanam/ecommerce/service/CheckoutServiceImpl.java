@@ -1,6 +1,8 @@
-package com.asifanam.ecommerce.dto;
+package com.asifanam.ecommerce.service;
 
 import com.asifanam.ecommerce.dao.CustomerRepository;
+import com.asifanam.ecommerce.dto.Purchase;
+import com.asifanam.ecommerce.dto.PurchaseResponse;
 import com.asifanam.ecommerce.entity.Customer;
 import com.asifanam.ecommerce.entity.Order;
 import com.asifanam.ecommerce.entity.OrderItem;
@@ -41,6 +43,17 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         //populate customer with order
         Customer customer = purchase.getCustomer();
+
+        //check if this is an existing customer
+
+        String theEmail = customer.getEmail();
+
+        Customer customerFromDB = customerRepository.findByEmail(theEmail);
+        if(customerFromDB != null){
+            //found .. assign them accordingly
+            customer = customerFromDB;
+        }
+
         customer.add(order);
 
         //save to the database
